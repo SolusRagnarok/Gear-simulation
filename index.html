@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro Gears 2D Simulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="flex h-screen w-full">
+
+    <div class="w-[400px] min-w-[400px] panel-bg flex flex-col z-10 h-full overflow-y-auto relative text-slate-100 shadow-2xl">
+        <div class="px-6 py-6 border-b border-slate-700 bg-slate-900 flex items-baseline gap-2">
+            <h1 class="text-3xl font-bold tracking-wider text-white uppercase">Astro</h1>
+            <h1 class="text-3xl font-bold tracking-wider text-blue-400 uppercase">Gears</h1>
+        </div>
+
+        <div class="p-6 flex flex-col gap-6 flex-1">
+            <div>
+                <div class="section-title">Animation Controls</div>
+                <div class="flex gap-2 mb-4">
+                    <button id="btn-toggle" class="ui-btn flex-1 active">Start / Stop</button>
+                    <button id="btn-reset" class="ui-btn flex-1 bg-red-900/30 hover:bg-red-800/50 border-red-800/50 text-red-200">Reset</button>
+                </div>
+                <div class="property-row">
+                    <label class="property-label">System Speed (RPM):</label>
+                    <div class="property-control">
+                        <input type="number" id="input-base-rpm" value="10" class="ui-input !w-24 text-center">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between border-b border-slate-700 pb-2 mb-3">
+                    <span class="text-[0.9rem] font-semibold text-slate-100 uppercase tracking-[0.5px]">Gear Hierarchy</span>
+                    <div class="flex gap-2">
+                        <button id="btn-add" class="ui-btn !py-1 !px-2 !text-xs bg-emerald-900/30 border-emerald-800/50 text-emerald-300">+ Add</button>
+                        <button id="btn-remove" class="ui-btn !py-1 !px-2 !text-xs bg-red-900/30 border-red-800/50 text-red-300">- Remove</button>
+                    </div>
+                </div>
+                <div id="gear-list" class="flex flex-col mb-2 max-h-48 overflow-y-auto bg-slate-900/50 rounded-lg p-2 border border-slate-700 shadow-inner">
+                    </div>
+            </div>
+
+            <div id="panel-connection" class="bg-slate-800/30 p-4 rounded-lg border border-slate-700/50">
+                <div class="section-title !border-none !mb-4">Gear Properties</div>
+                
+                <div class="property-row">
+                    <label class="property-label">Parent Gear:</label>
+                    <div class="property-control">
+                        <select id="input-parent" class="ui-input !w-full"></select>
+                    </div>
+                </div>
+                <div class="property-row">
+                    <label class="property-label">Internal Ring Gear:</label>
+                    <div class="property-control"><input type="checkbox" id="input-internal"></div>
+                </div>
+                <div class="property-row">
+                    <label class="property-label">Number of Teeth (N):</label>
+                    <div class="property-control">
+                        <input type="number" id="input-teeth" value="16" min="6" step="1" class="ui-input !w-16 text-center">
+                        <span class="ui-btn-small" onclick="stepValue('input-teeth', -1)">–</span>
+                        <span class="ui-btn-small" onclick="stepValue('input-teeth', 1)">+</span>
+                    </div>
+                </div>
+                <div class="property-row">
+                    <label class="property-label">Mount Angle (deg):</label>
+                    <div class="property-control">
+                        <input type="number" id="input-angle" value="0" class="ui-input !w-16 text-center">
+                        <span class="ui-btn-small" onclick="stepValue('input-angle', -15)">–</span>
+                        <span class="ui-btn-small" onclick="stepValue('input-angle', 15)">+</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <div class="section-title">Display Options</div>
+                <div class="property-row">
+                    <label class="property-label">Show Gear Labels:</label>
+                    <div class="property-control"><input type="checkbox" id="toggle-labels" checked></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvas-wrapper" class="flex-1 relative overflow-hidden bg-slate-50 flex justify-center items-center">
+        <canvas id="simulation-canvas"></canvas>
+        <div id="labels-container" class="absolute inset-0 pointer-events-none"></div>
+
+        <div id="physics-info-panel" class="absolute top-6 right-6 bg-slate-900/90 border border-slate-700 text-slate-200 p-4 rounded-lg shadow-2xl backdrop-blur-sm w-[340px] hidden z-40">
+            <div class="text-xs font-bold border-b border-slate-700 pb-2 mb-3 uppercase tracking-widest text-blue-400">Diophantine Gear Ratio</div>
+            <div class="text-xs text-slate-400 mb-4 leading-relaxed">
+                Solving the linear Diophantine equation <strong>ax - by = c</strong> to find exact gear synchronization cycles.
+            </div>
+            <div id="math-content" class="text-sm space-y-2 font-mono">
+                </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
